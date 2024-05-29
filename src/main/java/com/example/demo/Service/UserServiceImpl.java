@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.Model.User;
 import com.example.demo.Repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService
 {
@@ -19,6 +21,7 @@ public class UserServiceImpl implements UserService
 
 	@Override
 	public User addUser(User user) {
+		log.debug("user deratils {}",user);	
 		if(user!=null)
 		{
 			return userRepo.saveAndFlush(user);
@@ -31,7 +34,7 @@ public class UserServiceImpl implements UserService
 	public boolean loginUser(String username, String password,String userRole) {
 		
 		User user1 = userRepo.validateUser(username, password,userRole);
-		System.out.println("User: "+ user1);
+		log.debug("user {}",user1);
 		if(user1!=null)
 		{
 			return true;
@@ -75,6 +78,29 @@ public class UserServiceImpl implements UserService
 			return -1;
 		}
 }
+	@Override
+    public User updateUser(int uid, User user) {
+        Optional<User> existingUser = userRepo.findById(uid);
+        if (existingUser.isPresent()) {
+            User updatedUser = existingUser.get();
+            updatedUser.setUsername(user.getUsername());
+            updatedUser.setPassword(user.getPassword());
+            updatedUser.setUserRole(user.getUserRole());
+            updatedUser.setEmail(user.getEmail());
+            updatedUser.setPetname(user.getPetname());
+            return userRepo.save(updatedUser);
+        }
+        return null;
+    }
+	@Override
+	public boolean deleteUser(int uid) {
+	    Optional<User> existingUser = userRepo.findById(uid);
+	    if (existingUser.isPresent()) {
+	        userRepo.delete(existingUser.get());
+	        return true;
+	    }
+	    return false;
+	}
 	
 	
 	

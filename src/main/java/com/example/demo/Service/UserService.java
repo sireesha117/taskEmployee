@@ -12,6 +12,8 @@ public interface UserService
 	public User getUserById(int uid);
 	public int forgotPassword(String username,String petname);
 	public List<User> getAllUsers();// will be visible only if you are logged in
+	 public User updateUser(int uid, User user);
+	 public boolean deleteUser(int uid);
 	
 	
 

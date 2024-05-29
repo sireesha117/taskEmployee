@@ -21,7 +21,8 @@ import com.example.demo.Service.UserService;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @RestController
 @RequestMapping("auth/v1")
 @CrossOrigin(origins="*")
@@ -34,6 +35,9 @@ public class AuthenticationController
 	
 	@Autowired
 	private UserRepository userrepo;
+//	 @Autowired
+//	    private JwtClient jwtClient;
+	 
 	
 	
 	@PostMapping("/addUser")
@@ -81,8 +85,8 @@ public class AuthenticationController
 	
 		try
 		{
-			
-			String jwtToken = generateToken(user.getUsername(), user.getPassword(),user.getUserRole());
+			log.debug("user object is {}",user);
+			String jwtToken =generateToken(user.getUsername(), user.getPassword(),user.getUserRole());
 			mapObj.put("Message", "User successfully logged in");
 			mapObj.put("Token", jwtToken);
 			mapObj.put("userRole", user.getUserRole());
@@ -102,6 +106,7 @@ public class AuthenticationController
 		String petname=user.getPetname();
 		String password=user.getPassword();
 		int response = userService.forgotPassword(username,petname);
+		log.debug("response object is,{}",response);
 		try {
 		User user2=userService.getUserById(response);
 		user2.setPassword(password);

@@ -1,4 +1,5 @@
-package com.example.demo;
+package com.example.demo.controller;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,45 +30,43 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 @SpringBootTest
 public class AuthenticationControllerTest {
-	
+
 	@Mock
 	private UserServiceImpl userService;
-	
+
 	@InjectMocks
 	private AuthenticationController authC;
-	
+
 	@Autowired
 	private MockMvc mockMvc;
-	
-	
+
 	@BeforeEach
-	public void init()
-	{
+	public void init() {
 		MockitoAnnotations.openMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(authC).build();
 	}
-	
+
 	List<User> userList = new ArrayList<User>();
-	
+
 	@Test
-	public void addUserSuccess() throws Exception
-	{
+	public void addUserSuccess() throws Exception {
 		User user = new User();
-		user.setId(1);
+
 		user.setUsername("admin");
 		user.setPetname("dog");
 		user.setEmail("admin@gmail.com");
 		user.setPassword("admin");
-		
+
 		userList.add(user);
 		when(userService.addUser(any())).thenReturn(user);
-		
-		assertEquals(1,userList.size());
-mockMvc.perform(MockMvcRequestBuilders.post("/auth/v1/addUser").contentType(MediaType.APPLICATION_JSON)
-		.content(new ObjectMapper().writeValueAsString(user))).andExpect(MockMvcResultMatchers.status().isCreated());
-		
+
+		assertEquals(1, userList.size());
+		mockMvc.perform(MockMvcRequestBuilders.post("/auth/v1/addUser").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(user)))
+				.andExpect(MockMvcResultMatchers.status().isCreated());
+
 	}
-	
+
 	@Test
 	public void addUserFailure() throws Exception
 	{
